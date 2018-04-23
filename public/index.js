@@ -1,6 +1,34 @@
 /* global Vue, VueRouter, axios */
 
-
+var PostsNewPage = {
+  template: "#postsnew-page",
+  data: function() {
+    return {
+      title: "",
+      body: "",
+      image: ""
+    };
+  },
+  methods: {
+    submit: function() {
+      var params = {
+        title: this.title,
+        body: this.body,
+        image: this.image
+      };
+      axios
+        .post("/v1/posts", params)
+        .then(function(response) {
+          router.push("/");
+        })
+        .catch(
+          function(error) {
+            this.errors = error.response.data.errors;
+          }.bind(this)
+        );
+    }
+  }
+};
 
 var LogoutPage = {
   template: "<h1>Logout</h1>",
@@ -100,7 +128,8 @@ var router = new VueRouter({
     { path: "/", component: HomePage },
     { path: "/signup", component: SignupPage},
     { path: "/login", component: LoginPage},
-    { path: "/logout", component: LogoutPage}
+    { path: "/logout", component: LogoutPage},
+    { path: "/posts/new", component: PostsNewPage}
 
   ],
   scrollBehavior: function(to, from, savedPosition) {
